@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react';
-
+import uuid from 'uuid/v4';
 
 const Formulario = () => {
 
@@ -10,6 +10,8 @@ const Formulario = () => {
         hora:'',
         sintomas:''
     });
+
+    const [error, actualizarError]=useState(false);
 
     //funcion que se ejecuta cada vez que el usuario escribe en los input oneChange
 
@@ -22,12 +24,28 @@ const Formulario = () => {
     }
 
     //extraer los datos de cita
-    const {nombre, mascota, propietario, date, time}=cita;
+    const { mascota, propietario, fecha, hora, sintomas}=cita;
    // console.log(cita);
+
+   //cuando el usuario le da agregar cita submit
+   const submitCita=(evento)=>{
+    evento.preventDefault();
+    if(mascota.trim()==='' || propietario.trim()==='' || fecha.trim()==='' || hora.trim()==='' || sintomas.trim()===''){
+        actualizarError(true);
+        return;
+    }
+    actualizarError(false);
+    //console.log("Enviando"); 
+
+    cita.id=uuid();
+   }
     return (  
         <Fragment>
            <h2>Crear Cita</h2>
-           <form>
+           <form
+           onSubmit={submitCita}
+           >    
+           {error ? <p className="alerta-error">Todos los campos son obligagorios</p>: null}
                 <label>Nombre mascota</label>
                 <input
                     type="text"
